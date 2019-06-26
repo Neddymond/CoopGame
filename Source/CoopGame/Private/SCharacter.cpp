@@ -19,9 +19,19 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	/**
 	 * Bind the Inputs for the character movement
+	 * MoveForward -> moves the character forward or backwards based on the value
+	 * MoveRight -> moves the character right or left based on the value
 	 */
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
+
+	/** 
+	 * Bind inputs for Mouse look
+	 * AddControllerPitchInput -> enables the character to look up
+	 * AddControllerYawInput enables the character to be able to look sideways
+	 */
+	PlayerInputComponent->BindAxis("LookUp", this, &ASCharacter::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("Turn", this, &ASCharacter::AddControllerYawInput);
 
 }
 
