@@ -3,6 +3,7 @@
 #include "SCharacter.h"
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 
 // Sets default values
@@ -11,11 +12,21 @@ ASCharacter::ASCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	/** Create a Camera component */
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	/**
+	 * Create a SpringArmComponent
+	 * Make SpringArmComponent the Root component
+	 * Use the control rotation of the pawn where possible
+	 */
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->bUsePawnControlRotation = true;
 
-	/** Use the control rotation of the pawn where possible */
-	CameraComponent->bUsePawnControlRotation = true;
+	/**
+	 * Create a Camera component
+	 *  Attach the Camera to the springArmComponent
+	 */
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	CameraComponent->SetupAttachment(SpringArmComponent);
 }
 
 // Called to bind functionality to input
@@ -51,13 +62,19 @@ void ASCharacter::BeginPlay()
 /** Move character forward along the given world by getting the forward vector from this Actor in world space */
 void ASCharacter::MoveForward(float value)
 {
-	AddMovementInput(GetActorForwardVector() * value);
+	if (value == 0.0f)
+	{
+		AddMovementInput(GetActorForwardVector() * value);
+	}
 }
 
 /** Move character Right along the given world by getting the Right vector from this Actor in world space */
 void ASCharacter::MoveRight(float value)
 {
-	AddMovementInput(GetActorRightVector() * value);
+	if (value == 0.0f)
+	{
+		AddMovementInput(GetActorRightVector() * value);
+	}
 }
 
 // Called every frame

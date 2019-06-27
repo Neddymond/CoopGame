@@ -7,6 +7,7 @@
 #include "SCharacter.generated.h"
 
 class UCameraComponent;
+class USpringArmComponent;
 
 UCLASS()
 class COOPGAME_API ASCharacter : public ACharacter
@@ -30,8 +31,10 @@ protected:
 	void MoveRight(float value);
 
 	/** Third Person Camera component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 		UCameraComponent* CameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	USpringArmComponent* SpringArmComponent;
 
 public:	
 	// Called every frame
