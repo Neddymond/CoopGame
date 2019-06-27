@@ -36,9 +36,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
 
-	/** Crouch Functions */
+	/** Animation Functions */
 	void BeginCrouch();
 	void EndCrouch();
+	void BeginJump();
+	void EndJump();
 
 public:	
 	// Called every frame

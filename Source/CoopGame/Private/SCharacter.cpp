@@ -29,7 +29,7 @@ ASCharacter::ASCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
-	/** Enable support for Crouching */
+	/** Enable support for Character Animation */
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 }
 
@@ -58,9 +58,13 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	 * Bind Input for Character Animations
 	 * Crouch -> Crouches character
 	 * EndCrouch -> Stops character from crouching
+	 * BeginJump -> Play character jump Animation
+	 * EndJump -> Stop playing character jump Animation
 	 */
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ASCharacter::BeginCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ASCharacter::EndCrouch);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::BeginJump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ASCharacter::EndJump);
 
 }
 
@@ -99,6 +103,18 @@ void ASCharacter::BeginCrouch()
 void ASCharacter::EndCrouch()
 {
 	UnCrouch();
+}
+
+/** Enable character jump Animation */
+void ASCharacter::BeginJump()
+{
+	Jump();
+}
+
+/** Disable Character jump Animation */
+void ASCharacter::EndJump()
+{
+	StopJumping();
 }
 
 // Called every frame
