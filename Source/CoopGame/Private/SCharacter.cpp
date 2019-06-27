@@ -4,6 +4,7 @@
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 
 // Sets default values
@@ -27,6 +28,9 @@ ASCharacter::ASCharacter()
 	 */
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+
+	/** Enable support for Crouching */
+	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 }
 
 // Called to bind functionality to input
@@ -50,6 +54,14 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &ASCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Turn", this, &ASCharacter::AddControllerYawInput);
 
+	/**
+	 * Bind Input for Character Animations
+	 * Crouch -> Crouches character
+	 * EndCrouch -> Stops character from crouching
+	 */
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ASCharacter::BeginCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ASCharacter::EndCrouch);
+
 }
 
 // Called when the game starts or when spawned
@@ -62,7 +74,7 @@ void ASCharacter::BeginPlay()
 /** Move character forward along the given world by getting the forward vector from this Actor in world space */
 void ASCharacter::MoveForward(float value)
 {
-	if (value == 0.0f)
+	if (value != 0.0f)
 	{
 		AddMovementInput(GetActorForwardVector() * value);
 	}
@@ -71,10 +83,22 @@ void ASCharacter::MoveForward(float value)
 /** Move character Right along the given world by getting the Right vector from this Actor in world space */
 void ASCharacter::MoveRight(float value)
 {
-	if (value == 0.0f)
+	if (value != 0.0f)
 	{
 		AddMovementInput(GetActorRightVector() * value);
 	}
+}
+
+/** Crouch character */
+void ASCharacter::BeginCrouch()
+{
+	Crouch();
+}
+
+/** Stop character from Crouching */
+void ASCharacter::EndCrouch()
+{
+	UnCrouch();
 }
 
 // Called every frame
