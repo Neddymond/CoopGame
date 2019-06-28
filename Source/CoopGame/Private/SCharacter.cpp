@@ -68,6 +68,17 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+/** returns pawn's eyes location */
+FVector ASCharacter::GetPawnViewLocation() const
+{
+	if (CameraComponent)
+	{
+		CameraComponent->GetComponentLocation();
+	}
+
+	return Super::GetPawnViewLocation();
+}
+
 // Called when the game starts or when spawned
 void ASCharacter::BeginPlay()
 {
