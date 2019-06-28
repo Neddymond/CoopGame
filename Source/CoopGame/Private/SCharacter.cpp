@@ -73,7 +73,7 @@ FVector ASCharacter::GetPawnViewLocation() const
 {
 	if (CameraComponent)
 	{
-		CameraComponent->GetComponentLocation();
+		return CameraComponent->GetComponentLocation();
 	}
 
 	return Super::GetPawnViewLocation();

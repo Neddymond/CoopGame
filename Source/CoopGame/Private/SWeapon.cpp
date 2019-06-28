@@ -4,6 +4,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -66,11 +67,17 @@ void ASWeapon::Fire()
 			/** Actor  that owns the component that was hit */
 			AActor* HitActor = Hit.GetActor();
 
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Hit");
+
 			/** Process damage */
 			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
 		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "UnHit");
+		}
 
-		DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::White, false, 1.f, 0, 1.f);
+		DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.f, 0, 1.f);
 	}
 }
 
