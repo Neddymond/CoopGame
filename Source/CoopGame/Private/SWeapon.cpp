@@ -2,6 +2,7 @@
 
 #include "SWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -23,6 +24,48 @@ void ASWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASWeapon::Fire()
+{
+	/** Trace the world, from pawn eyes to crosshair location */
+
+	AActor* MyOwner = GetOwner();
+	if (MyOwner)
+	{
+		FVector EyeLocation;
+		FRotator EyeRotation;
+
+		/** Returns the point of view of the actor */
+		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
+		/** End Location of the ray */
+		FVector TraceEnd = EyeLocation + (EyeRotation.Vector() * 10000);
+
+		/** Additional Parameters used for the trace */
+		FCollisionQueryParams QueryParams;
+
+		/** Actors for the Trace to Ignore */
+		QueryParams.AddIgnoredActor(MyOwner);
+		QueryParams.AddIgnoredActor(this);
+
+		/** Trace against a complex collision */
+		QueryParams.bTraceComplex = true;
+
+		FHitResult Hit;
+		/**
+		 * LineTraceSingleByChannel -> Traces a ray against the world by a channel and returns 
+		 the first blocking hit
+		 * Returns true if a blocking hit is found
+		 */
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams))
+		{
+			/** Process damage */
+
+		}
+
+		DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::White, false, 1.f, 0, 1.f);
+	}
 }
 
 // Called every frame
