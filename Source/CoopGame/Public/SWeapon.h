@@ -32,6 +32,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TSubclassOf<UDamageType> DamageType;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	FName MuzzleSocketName;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+		FName TracerTargetName;
+
+	/** Muzzle Particle Effects */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+		UParticleSystem* MuzzleEffect;
+
+	/** Impact Particle Effects */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+		UParticleSystem* ImpactEffect;
+	/** Tracer particle effects */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+		UParticleSystem* TracerEffects;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

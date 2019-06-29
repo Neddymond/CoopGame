@@ -5,6 +5,8 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -16,9 +18,11 @@ ASWeapon::ASWeapon()
 	 * Create a Skeletal Mesh component
 	 * Make MeshComp the RootComponent
 	 */
-	MeshComp = CreateDefaultSubobject < USkeletalMeshComponent>(TEXT("MeshComp"));
+	MeshComp = CreateDefaultSubobject <USkeletalMeshComponent>(TEXT("MeshComp"));
 	RootComponent = MeshComp;
 
+	MuzzleSocketName = "MuzzleSocket";
+	TracerTargetName = "Target";
 }
 
 // Called when the game starts or when spawned
@@ -41,6 +45,7 @@ void ASWeapon::Fire()
 		/** Returns the point of view of the actor */
 		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
+		/** Direction of the hit */
 		FVector ShotDirection = EyeRotation.Vector();
 
 		/** End Location of the ray */
@@ -56,6 +61,9 @@ void ASWeapon::Fire()
 		/** Trace against a complex collision */
 		QueryParams.bTraceComplex = true;
 
+		/** Particle "Target' Parameter */
+		FVector TracerEndPoint = TraceEnd;
+
 		FHitResult Hit;
 		/**
 		 * LineTraceSingleByChannel -> Traces a ray against the world by a channel and returns 
@@ -64,13 +72,21 @@ void ASWeapon::Fire()
 		 */
 		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams))
 		{
-			/** Actor  that owns the component that was hit */
+			/** Actor that will be damaged */
 			AActor* HitActor = Hit.GetActor();
 
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Hit");
 
-			/** Process damage */
+			/** Hurt the specified actor with the specified impact */
 			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
+
+			if (ImpactEffect)
+			{
+				/** Spawn Particle effect at the hit location */
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+			}
+
+			TracerEndPoint = Hit.ImpactPoint;
 		}
 		else
 		{
@@ -78,6 +94,25 @@ void ASWeapon::Fire()
 		}
 
 		DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.f, 0, 1.f);
+		
+		if (MuzzleEffect)
+		{
+			/** Spawn Particle effect at the Muzzle */
+			UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComp, MuzzleSocketName);
+		}
+
+		if (TracerEffects)
+		{
+			/** Get world-space socket or bone location */
+			FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
+
+			UParticleSystemComponent* TracerComponent = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffects, MuzzleLocation);
+
+			if (TracerComponent)
+			{
+				TracerComponent->SetVectorParameter(TracerTargetName, TracerEndPoint);
+			}
+		}
 	}
 }
 
