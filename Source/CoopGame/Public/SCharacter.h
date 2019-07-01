@@ -41,6 +41,8 @@ protected:
 	void EndCrouch();
 	void BeginJump();
 	void EndJump();
+	void BeginZoom();
+	void EndZoom();
 
 public:	
 	// Called every frame
@@ -51,6 +53,16 @@ public:
 
 	virtual FVector GetPawnViewLocation() const override;
 
-	
+	bool bWantsToZoom;
+
+	/** Camera's Zoomed field of view */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
+	float ZoomedFOV;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player", meta = (clampMin = 0.1, ClampMax = 100.0))
+	float ZoomInterpSpeed;
+
+	/** default field of view: Set during begin play */
+	float DefaultFOV;
 	
 };

@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+//#include "Math/UnrealMathUtility.h"
 
 
 // Sets default values
@@ -31,7 +32,39 @@ ASCharacter::ASCharacter()
 
 	/** Enable support for Character Animation */
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	/** Camera's Zoomed field of view */
+	ZoomedFOV = 65.0f;
+
+	ZoomInterpSpeed = 20;
 }
+
+// Called when the game starts or when spawned
+void ASCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	/** Camera's Default field of view */
+	DefaultFOV = CameraComponent->FieldOfView;
+
+}
+
+// Called every frame
+void ASCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	/** Target field of view */
+	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
+
+	/** Interpolate from Current field of view to Target field of view */
+	float NewFOV = FMath::FInterpTo(CameraComponent->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
+
+	/** Set Camera's current field of view */
+	CameraComponent->SetFieldOfView(NewFOV);
+
+}
+
 
 // Called to bind functionality to input
 void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -60,11 +93,14 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	 * EndCrouch -> Stops character from crouching
 	 * BeginJump -> Play character jump Animation
 	 * EndJump -> Stop playing character jump Animation
+	 * BeginZoom -> Zoom Camera
 	 */
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ASCharacter::BeginCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ASCharacter::EndCrouch);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::BeginJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ASCharacter::EndJump);
+	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &ASCharacter::BeginZoom);
+	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &ASCharacter::EndZoom);
 
 }
 
@@ -77,13 +113,6 @@ FVector ASCharacter::GetPawnViewLocation() const
 	}
 
 	return Super::GetPawnViewLocation();
-}
-
-// Called when the game starts or when spawned
-void ASCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	
 }
 
 /** Move character forward along the given world by getting the forward vector from this Actor in world space */
@@ -128,11 +157,13 @@ void ASCharacter::EndJump()
 	StopJumping();
 }
 
-// Called every frame
-void ASCharacter::Tick(float DeltaTime)
+void ASCharacter::BeginZoom()
 {
-	Super::Tick(DeltaTime);
-
+	bWantsToZoom = true;
 }
 
+void ASCharacter::EndZoom()
+{
+	bWantsToZoom = false;
+}
 
