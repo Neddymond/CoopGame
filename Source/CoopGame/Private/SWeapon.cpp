@@ -115,5 +115,20 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
 			TracerComponent->SetVectorParameter(TracerTargetName, TraceEnd);
 		}
 	}
+
+	/**
+	 * Get Owner (Cast to Pawn); Get PlayerController
+	 * If PlayerController is not null, Play Camera Shake.
+	 */
+	APawn* MyOwner = Cast<APawn>(GetOwner());
+	if (MyOwner)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(MyOwner->GetController());
+
+		if (PlayerController)
+		{
+			PlayerController->ClientPlayCameraShake(FireCameraShake);
+		}
+	}
 }
 
