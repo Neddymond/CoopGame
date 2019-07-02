@@ -19,15 +19,10 @@ public:
 	ASWeapon();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	/** Visual element of our weapon */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USkeletalMeshComponent* MeshComp;
-
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	virtual void Fire();
+		USkeletalMeshComponent* MeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TSubclassOf<UDamageType> DamageType;
@@ -49,10 +44,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* TracerEffects;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void PlayFireEffects(FVector TraceEnd);
 
-	
-	
+public:	
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		virtual void Fire();
 };

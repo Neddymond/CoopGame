@@ -5,7 +5,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
-//#include "Math/UnrealMathUtility.h"
+#include "SWeapon.h"
+#include "Engine/Engine.h"
 
 
 // Sets default values
@@ -37,6 +38,8 @@ ASCharacter::ASCharacter()
 	ZoomedFOV = 65.0f;
 
 	ZoomInterpSpeed = 20;
+
+	WeaponAttachSocketName = "WeaponSocket";
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +49,21 @@ void ASCharacter::BeginPlay()
 
 	/** Camera's Default field of view */
 	DefaultFOV = CameraComponent->FieldOfView;
+
+	FActorSpawnParameters SpawnParameters;
+
+	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	/** Spawn a default weapon */
+	CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParameters);
+
+	if (CurrentWeapon)
+	{
+		/** Set Owner */
+		CurrentWeapon->SetOwner(this);
+
+		CurrentWeapon->AttachToComponent(Cast<USceneComponent>(GetMesh()), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
+	}
 
 }
 
@@ -94,13 +112,19 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	 * BeginJump -> Play character jump Animation
 	 * EndJump -> Stop playing character jump Animation
 	 * BeginZoom -> Zoom Camera
+	 * Fire -> Fire a Weapon
 	 */
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ASCharacter::BeginCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ASCharacter::EndCrouch);
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASCharacter::BeginJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ASCharacter::EndJump);
+
 	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &ASCharacter::BeginZoom);
 	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &ASCharacter::EndZoom);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ASCharacter::Fire);
+	//PlayerInputComponent->BindAction("Fire", IE_Released, this, &ASCharacter::Fire);
 
 }
 
@@ -165,5 +189,13 @@ void ASCharacter::BeginZoom()
 void ASCharacter::EndZoom()
 {
 	bWantsToZoom = false;
+}
+
+void ASCharacter::Fire()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Fire();
+	}
 }
 
