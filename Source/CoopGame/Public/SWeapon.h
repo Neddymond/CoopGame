@@ -38,13 +38,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* MuzzleEffect;
 
-	/** Impact Particle Effects */
+	/** Default Impact Particle Effects */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-		UParticleSystem* ImpactEffect;
+		UParticleSystem* DefaultImpactEffect;
+
+	/** Flesh Impact Particle Effects */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+		UParticleSystem* FleshImpactEffect;
+
 	/** Tracer particle effects */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* TracerEffects;
 
+	/** Effects played when a weapon is fired */
 	void PlayFireEffects(FVector TraceEnd);
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")

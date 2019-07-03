@@ -56,8 +56,6 @@ void ASWeapon::Fire()
 		/** Trace against a complex collision */
 		QueryParams.bTraceComplex = true;
 
-		QueryParams.bReturnPhysicalMaterial = true;
-
 		/** Particle "Target' Parameter */
 		FVector TracerEndPoint = TraceEnd;
 
