@@ -67,7 +67,7 @@ void ASWeapon::Fire()
 		 the first blocking hit
 		 * Returns true if a blocking hit is found
 		 */
-		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams))
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
 		{
 			/** Actor that will be damaged */
 			AActor* HitActor = Hit.GetActor();

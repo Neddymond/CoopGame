@@ -3,6 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+/** Multiple Surface Types */
 #define SURFACE_FLESHDEFAULT		SurfaceType1
 #define SURFACE_FLESHVULNERABLE		SurfaceType2
+
+/** Custom collision Channels */
+#define COLLISION_WEAPON			ECC_Visibility
 
