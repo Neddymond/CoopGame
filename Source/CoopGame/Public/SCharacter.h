@@ -49,7 +49,10 @@ protected:
 	ASWeapon* CurrentWeapon;
 
 	/** Fire a Weapon */
-	void Fire();
+	void StartFire();
+
+	/** Stop firing a weapon */
+	void StopFire();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
 	TSubclassOf<ASWeapon>StarterWeaponClass;

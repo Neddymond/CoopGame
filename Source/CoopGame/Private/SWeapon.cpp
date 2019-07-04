@@ -9,6 +9,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "CoopGame.h"
+#include "TimerManager.h"
 
 int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVARDebugDrawing(TEXT("COOP.DebugWeapons"), DebugWeaponDrawing, TEXT("Draw Debug Lines For Weapons"), ECVF_Cheat);
@@ -23,9 +24,22 @@ ASWeapon::ASWeapon()
 	MeshComp = CreateDefaultSubobject <USkeletalMeshComponent>(TEXT("MeshComp"));
 	RootComponent = MeshComp;
 
+	/** Weapon Attach point name */
 	MuzzleSocketName = "MuzzleSocket";
+
 	TracerTargetName = "Target";
+
+	/** Damage value */
 	BaseDamage = 20.0f;
+
+	RateOfFire = 600;
+}
+
+void ASWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TimeBetweenShots = 60 / RateOfFire;
 }
 
 void ASWeapon::Fire()
@@ -78,7 +92,9 @@ void ASWeapon::Fire()
 			/** Types of surfaces in the game */
 			EPhysicalSurface SurfaceTypes = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 
+			/** Damage value*/
 			float ActualDamage = BaseDamage;
+
 			if (SurfaceTypes == SURFACE_FLESHVULNERABLE)
 			{
 				/** Massive Damage when we hit a SURFACE_FLESHVULNERABLE */
@@ -110,6 +126,7 @@ void ASWeapon::Fire()
 			}
 
 			TracerEndPoint = Hit.ImpactPoint;
+
 		}
 		else
 		{
@@ -122,7 +139,26 @@ void ASWeapon::Fire()
 		}
 
 		PlayFireEffects(TracerEndPoint);
+
+		/** The last time a shot was fired */
+		LastFireTime = GetWorld()->TimeSeconds;
 	}
+}
+
+/** Call Fire function every "TimeBetweenShots" */
+void ASWeapon::StartFire()
+{
+	/** The Time before the first fire; Must be >= 0 */
+	float FirstDelay = FMath::Max(LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds, 0.0f);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_TimeInBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true, FirstDelay);
+}
+
+/** Stop Firing */
+void ASWeapon::StopFire()
+{
+	/** Clear all Timer bound to the Fire Function */
+	GetWorldTimerManager().ClearTimer(TimerHandle_TimeInBetweenShots);
 }
 
 void ASWeapon::PlayFireEffects(FVector TraceEnd)
