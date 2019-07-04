@@ -25,6 +25,7 @@ ASWeapon::ASWeapon()
 
 	MuzzleSocketName = "MuzzleSocket";
 	TracerTargetName = "Target";
+	BaseDamage = 20.0f;
 }
 
 void ASWeapon::Fire()
@@ -74,11 +75,18 @@ void ASWeapon::Fire()
 
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, "Hit");
 
-			/** Hurt the specified actor with the specified impact */
-			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
-
 			/** Types of surfaces in the game */
 			EPhysicalSurface SurfaceTypes = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+
+			float ActualDamage = BaseDamage;
+			if (SurfaceTypes == SURFACE_FLESHVULNERABLE)
+			{
+				/** Massive Damage when we hit a SURFACE_FLESHVULNERABLE */
+				ActualDamage *= 4.0f;
+			}
+
+			/** Hurt the specified actor with the specified impact */
+			UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
 
 			UParticleSystem* SelectedEffects = nullptr;
 
