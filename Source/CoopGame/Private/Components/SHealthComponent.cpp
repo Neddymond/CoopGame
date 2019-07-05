@@ -1,13 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SHealthComponent.h"
+#include "Engine/Engine.h"
 
 
 // Sets default values for this component's properties
 USHealthComponent::USHealthComponent()
 {
 	/** Defualt health of the player */
-	Health = 100; 
+	DefaultHealth = 100; 
 }
 
 
@@ -16,6 +17,29 @@ void USHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/** Get the Actor of the component */
+	AActor* MyOwner = GetOwner();
+
+	if (MyOwner)
+	{
+		/** When the Actor is damaged in any way */
+		MyOwner->OnTakeAnyDamage.AddDynamic(this, &USHealthComponent::HandleTakeAnyDamage);
+	}
+
+	Health = DefaultHealth;
+}
+
+/** Player's Health when damaged */
+void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Damage < 0.0f)
+	{
+		return;
+	}
+
+	Health = FMath::Clamp(Health - Damage, 0.0f, DefaultHealth);
+
+	UE_LOG(LogTemp, Log, TEXT("Health Changed: %s"), *FString::SanitizeFloat(Health)); 
 }
 
 

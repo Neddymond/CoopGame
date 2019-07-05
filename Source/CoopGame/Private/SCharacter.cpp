@@ -7,7 +7,8 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "SWeapon.h"
 #include "Engine/Engine.h"
-
+#include "Components/CapsuleComponent.h"
+#include "CoopGame.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -31,8 +32,8 @@ ASCharacter::ASCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
-	/** Enable support for Character Animation */
-	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	/** Ignore Capsule Component collision */
+	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
 
 	/** Camera's Zoomed field of view */
 	ZoomedFOV = 65.0f;
