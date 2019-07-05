@@ -7,7 +7,7 @@
 // Sets default values for this component's properties
 USHealthComponent::USHealthComponent()
 {
-	/** Defualt health of the player */
+	/** Default health of the player */
 	DefaultHealth = 100; 
 }
 
@@ -40,6 +40,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	Health = FMath::Clamp(Health - Damage, 0.0f, DefaultHealth);
 
 	UE_LOG(LogTemp, Log, TEXT("Health Changed: %s"), *FString::SanitizeFloat(Health)); 
-}
 
+	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
+}
 
