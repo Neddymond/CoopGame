@@ -14,7 +14,7 @@ class COOPGAME_API USHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:	 
 	// Sets default values for this component's properties
 	USHealthComponent();
 

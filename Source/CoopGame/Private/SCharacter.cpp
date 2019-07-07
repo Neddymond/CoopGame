@@ -5,10 +5,12 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "GameFrameWork/CharacterMovementComponent.h"
 #include "SWeapon.h"
 #include "Engine/Engine.h"
 #include "Components/CapsuleComponent.h"
 #include "CoopGame.h"
+#include "SHealthComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -32,6 +34,9 @@ ASCharacter::ASCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
+	/** The Health Component of the character */
+	HealthComponent = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComponent"));
+
 	/** Ignore Capsule Component collision */
 	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
 
@@ -41,6 +46,7 @@ ASCharacter::ASCharacter()
 	ZoomInterpSpeed = 20;
 
 	WeaponAttachSocketName = "WeaponSocket";
+
 }
 
 // Called when the game starts or when spawned
@@ -65,6 +71,8 @@ void ASCharacter::BeginPlay()
 
 		CurrentWeapon->AttachToComponent(Cast<USceneComponent>(GetMesh()), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 	}
+
+	HealthComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 
 }
 
@@ -205,6 +213,30 @@ void ASCharacter::StopFire()
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->StopFire();
+	}
+}
+
+/** Character Health affected by Damage */
+void ASCharacter::OnHealthChanged(USHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.0 && !bDied)
+	{
+		/** Character should die */
+
+		bDied = true;
+
+		/** Stop Character's movement */
+		GetMovementComponent()->StopMovementImmediately();
+
+		/** Disable Collision on the Capsule */
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		/** Safely detach Pawn from Controller knowing that we will be destroyed soon */
+		DetachFromControllerPendingDestroy();
+
+		/** Time before Character gets destroyed */
+		SetLifeSpan(10.0f);
+
 	}
 }
 

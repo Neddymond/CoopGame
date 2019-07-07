@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class ASWeapon;
+class USHealthComponent;
 
 UCLASS()
 class COOPGAME_API ASCharacter : public ACharacter
@@ -48,6 +49,9 @@ protected:
 	/** Character's current weapon */
 	ASWeapon* CurrentWeapon;
 
+	/** Character HealthComponent */
+	USHealthComponent* HealthComponent;
+
 	/** Fire a Weapon */
 	void StartFire();
 
@@ -60,6 +64,10 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
+	/** Character's Health when damaged */
+	UFUNCTION()
+	void OnHealthChanged(USHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -70,6 +78,10 @@ public:
 	virtual FVector GetPawnViewLocation() const override;
 
 	bool bWantsToZoom;
+
+	/** Player already dead */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
+	bool bDied;
 
 	/** Camera's Zoomed field of view */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
