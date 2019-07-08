@@ -67,7 +67,7 @@ protected:
 
 	/** Character's Health when damaged */
 	UFUNCTION()
-	void OnHealthChanged(USHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void OnHealthChanged(USHealthComponent* OwningHealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 public:	
 	// Called every frame
@@ -75,13 +75,13 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 	virtual FVector GetPawnViewLocation() const override;
 
 	bool bWantsToZoom;
 
 	/** Player already dead */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player")
 	bool bDied;
 
 	/** Camera's Zoomed field of view */
