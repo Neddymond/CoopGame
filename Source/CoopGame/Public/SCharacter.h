@@ -49,6 +49,7 @@ protected:
 	/** Character's current weapon */
 	ASWeapon* CurrentWeapon;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
 	/** Character HealthComponent */
 	USHealthComponent* HealthComponent;
 
