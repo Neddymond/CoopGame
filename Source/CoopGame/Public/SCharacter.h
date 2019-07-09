@@ -11,6 +11,7 @@ class USpringArmComponent;
 class ASWeapon;
 class USHealthComponent;
 
+
 UCLASS()
 class COOPGAME_API ASCharacter : public ACharacter
 {

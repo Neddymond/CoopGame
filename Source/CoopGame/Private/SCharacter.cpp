@@ -11,6 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "CoopGame.h"
 #include "SHealthComponent.h"
+#include "Components//StaticMeshComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -239,4 +240,5 @@ void ASCharacter::OnHealthChanged(USHealthComponent* HealthComponent, float Heal
 
 	}
 }
+
 

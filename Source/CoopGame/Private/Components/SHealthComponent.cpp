@@ -20,6 +20,8 @@ void USHealthComponent::BeginPlay()
 	/** Get the Actor of the component */
 	AActor* MyOwner = GetOwner();
 
+	
+
 	if (MyOwner)
 	{
 		/** When the Actor is damaged in any way */
