@@ -33,6 +33,9 @@ ASWeapon::ASWeapon()
 	BaseDamage = 20.0f;
 
 	RateOfFire = 600;
+
+	/** Spawn/Replicate this Actor on client */
+	SetReplicates(true);
 }
 
 void ASWeapon::BeginPlay()

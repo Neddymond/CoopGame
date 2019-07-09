@@ -47,7 +47,11 @@ protected:
 	void BeginZoom();
 	void EndZoom();
 
-	/** Character's current weapon */
+	/**
+	 * Character's current weapon
+	 * Replicate in client
+	 */
+	UPROPERTY(Replicated)
 	ASWeapon* CurrentWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
@@ -69,6 +73,8 @@ protected:
 	/** Character's Health when damaged */
 	UFUNCTION()
 	void OnHealthChanged(USHealthComponent* OwningHealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 public:	
 	// Called every frame
