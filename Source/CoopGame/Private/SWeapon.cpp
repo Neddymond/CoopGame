@@ -47,6 +47,13 @@ void ASWeapon::BeginPlay()
 
 void ASWeapon::Fire()
 {
+	/** If it's the client, call ServerFire function */
+	if (Role < ROLE_Authority)
+	{
+		ServerFire();
+	}
+
+
 	/** Trace the world, from pawn eyes to crosshair location */
 
 	AActor* MyOwner = GetOwner();
@@ -146,6 +153,16 @@ void ASWeapon::Fire()
 		/** The last time a shot was fired */
 		LastFireTime = GetWorld()->TimeSeconds;
 	}
+}
+
+void ASWeapon::ServerFire_Implementation()
+{
+	Fire();
+}
+
+bool ASWeapon::ServerFire_Validate()
+{
+	return true;
 }
 
 /** Call Fire function every "TimeBetweenShots" */

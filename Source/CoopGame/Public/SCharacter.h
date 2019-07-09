@@ -88,7 +88,7 @@ public:
 	bool bWantsToZoom;
 
 	/** Player already dead */
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	bool bDied;
 
 	/** Camera's Zoomed field of view */
