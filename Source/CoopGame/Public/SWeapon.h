@@ -10,6 +10,22 @@ class USkeletlMeshComponent;
 class UDamageType;
 class UCameraShake;
 
+/** Contains information of a single hitscan linetrace */
+USTRUCT()
+struct FHitScanTrace
+{
+	GENERATED_BODY()
+		  
+public:
+
+	UPROPERTY()
+	FVector_NetQuantize TraceFrom;
+
+	UPROPERTY()
+	FVector_NetQuantize TraceTo;
+
+};
+
 UCLASS()
 class COOPGAME_API ASWeapon : public AActor
 {
@@ -55,6 +71,8 @@ protected:
 	/** Effects played when a weapon is fired */
 	void PlayFireEffects(FVector TraceEnd);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<UCameraShake>FireCameraShake;
 
@@ -76,6 +94,14 @@ protected:
 	float RateOfFire;
 
 	float TimeBetweenShots;
+
+	/** Trigger a function (OnRep_HitScanTrace) every time this property
+	gets replicated */
+	UPROPERTY(ReplicatedUsing=OnRep_HitScanTrace)
+	FHitScanTrace HitScanTrace;
+
+	UFUNCTION()
+		void OnRep_HitScanTrace();
 
 public:	
 
