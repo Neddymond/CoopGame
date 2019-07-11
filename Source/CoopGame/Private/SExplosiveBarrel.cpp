@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Engine/Engine.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -40,6 +41,9 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 
 	ExplosionImpulse = 400;
 
+	SetReplicates(true);
+	SetReplicateMovement(true);
+
 }
 
 
@@ -55,21 +59,38 @@ void ASExplosiveBarrel::OnHealthChanged(USHealthComponent* OwningHealthComponent
 		/** Explode */
 		bExploded = true;
 
+		OnRep_Explode();
+
 		/** Boost the Barrel Upwards */
 		FVector BoostIntensity = FVector::UpVector * ExplosionImpulse;
 
 		/** Add an impulse to the barrel to blow it up */
 		MeshComponent->AddImpulse(BoostIntensity, NAME_None, true);
 
-		/** Play Explosion Effects */
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffects, GetActorLocation());
-
-		/** Override Mesh color to black */
-		MeshComponent->SetMaterial(0, ExplodedMaterial);
-
 		/** Blast away nearby Actors */
 		RadialForceComponent->FireImpulse();
 
 	}
 }
+
+/**
+ * Called when bExploded is true
+ * Replicate Visual effects on Client
+ */
+void ASExplosiveBarrel::OnRep_Explode()
+{
+	/** Play Explosion Effects */
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffects, GetActorLocation());
+
+	/** Override Mesh color to black */
+	MeshComponent->SetMaterial(0, ExplodedMaterial);
+}
+
+void ASExplosiveBarrel::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ASExplosiveBarrel, bExploded);
+}
+
+
 

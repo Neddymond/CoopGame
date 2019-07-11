@@ -48,6 +48,8 @@ ASCharacter::ASCharacter()
 
 	WeaponAttachSocketName = "WeaponSocket";
 
+	
+
 }
 
 // Called when the game starts or when spawned

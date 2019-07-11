@@ -34,6 +34,8 @@ protected:
 	UFUNCTION()
 		void OnHealthChanged(USHealthComponent* OwningHealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+
 	/** Particle to play when health reaches zero */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FX")
 	UParticleSystem* ExplosionEffects;
@@ -47,7 +49,12 @@ protected:
 	float ExplosionImpulse;
 
 	/** True when Exploded */
+	UPROPERTY(ReplicatedUsing=OnRep_Explode)
 	bool bExploded;
+
+	/** Called when bExploded is true */
+	UFUNCTION()
+		void OnRep_Explode();
 
 public:	
 
