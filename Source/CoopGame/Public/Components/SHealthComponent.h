@@ -24,7 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	/** Actor's Health */
-	UPROPERTY(BlueprintReadOnly, Category = "HealthComponents")
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "HealthComponents")
 	float Health;
 
 	/** Actor's default Health */
@@ -33,6 +33,8 @@ protected:
 	
 	UFUNCTION() 
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 
 public:	
