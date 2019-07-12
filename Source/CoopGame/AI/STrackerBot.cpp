@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "SHealthComponent.h"
 
 
 
@@ -31,6 +32,11 @@ ASTrackerBot::ASTrackerBot()
 	MovementForce = 1000;
 
 	RequiredDistanceToTarget = 100;
+
+	/** Create a health component */
+	HealthComponent = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComponent"));
+
+	HealthComponent->OnHealthChanged.AddDynamic(this, &ASTrackerBot::HandleTakeDamage);
 }
 
 // Called when the game starts or when spawned
@@ -59,7 +65,12 @@ FVector ASTrackerBot::GetNextPathPoint()
 	return GetActorLocation();
 }
 
+void ASTrackerBot::HandleTakeDamage(USHealthComponent* OwningHealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	/** Explode on hitpoints == 0 */
 
+	UE_LOG(LogTemp, Log, TEXT("Health %s of %s"), *FString::SanitizeFloat(Health), *GetName());
+}
 
 // Called every frame
 void ASTrackerBot::Tick(float DeltaTime)
