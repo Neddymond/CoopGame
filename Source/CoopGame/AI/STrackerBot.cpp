@@ -7,7 +7,7 @@
 #include "NavigationPath.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "DrawDebugHelpers.h"
 
 
 
@@ -23,13 +23,22 @@ ASTrackerBot::ASTrackerBot()
 	
 	/** Make MeshComponent the Root component */
 	RootComponent = MeshComponent;
+
+	MeshComponent->SetSimulatePhysics(true);
+
+	bUseVelocityChange = false;
+
+	MovementForce = 1000;
+
+	RequiredDistanceToTarget = 100;
 }
 
 // Called when the game starts or when spawned
 void ASTrackerBot::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	NextPathPoint = GetNextPathPoint();
 }
 
 
@@ -51,10 +60,34 @@ FVector ASTrackerBot::GetNextPathPoint()
 }
 
 
+
 // Called every frame
 void ASTrackerBot::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	/** find the distance to the Target */
+	float DistanceToTarget = (GetActorLocation() - NextPathPoint).Size();
+
+	if (DistanceToTarget <= RequiredDistanceToTarget)
+	{
+		NextPathPoint = GetNextPathPoint();
+		
+		DrawDebugString(GetWorld(), GetActorLocation(), "Target Reached");
+	}
+	else
+	{
+		/** Keep moving towards Next direction */
+		FVector ForceDirection = NextPathPoint - GetActorLocation();
+		ForceDirection.Normalize();
+
+		ForceDirection *= MovementForce;
+
+		MeshComponent->AddForce(ForceDirection, NAME_None, bUseVelocityChange);
+
+		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + ForceDirection, 32, FColor::Yellow, false, 0.0f, 0, 1);
+	}
+
+	DrawDebugSphere(GetWorld(), NextPathPoint, 20, 12, FColor::Yellow, false, 0.f, 1.f);
 }
 

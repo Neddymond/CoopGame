@@ -19,14 +19,27 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	FVector GetNextPathPoint();
+
 	 UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent*  MeshComponent;
 
+	 /** Next point in Navigation path */
+	 FVector NextPathPoint;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+	 bool bUseVelocityChange;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+	 float MovementForce;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+	 float  RequiredDistanceToTarget;
 
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FVector GetNextPathPoint();
+
 };
