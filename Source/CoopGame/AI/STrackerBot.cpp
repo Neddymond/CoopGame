@@ -70,6 +70,17 @@ void ASTrackerBot::HandleTakeDamage(USHealthComponent* OwningHealthComponent, fl
 	/** Explode on hitpoints == 0 */
 
 	UE_LOG(LogTemp, Log, TEXT("Health %s of %s"), *FString::SanitizeFloat(Health), *GetName());
+
+	/** if MaterialInstance is not set yet, we create and set one */
+	if (MaterialInstance == nullptr)
+	{
+		MaterialInstance = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, MeshComponent->GetMaterial(0));
+	}
+
+	if (MaterialInstance)
+	{
+		MaterialInstance->SetScalarParameterValue("LastTimeDamageTaken", GetWorld()->TimeSeconds);
+	}
 }
 
 // Called every frame

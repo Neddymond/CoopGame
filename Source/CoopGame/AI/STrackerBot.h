@@ -44,6 +44,10 @@ protected:
 	 UFUNCTION()
 	 void HandleTakeDamage(USHealthComponent* OwningHealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	 /** Material instance to pulse on damage */
+	 UMaterialInstanceDynamic* MaterialInstance;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
