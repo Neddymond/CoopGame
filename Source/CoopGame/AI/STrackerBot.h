@@ -7,6 +7,7 @@
 #include "STrackerBot.generated.h"
 
 class USHealthComponent;
+class USphereComponent;
 
 UCLASS()
 class COOPGAME_API ASTrackerBot : public APawn
@@ -25,6 +26,9 @@ protected:
 
 	 UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent*  MeshComponent;
+
+	 UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+		 USphereComponent* SphereComponent;
 
 	 /** Next point in Navigation path */
 	 FVector NextPathPoint;
@@ -48,7 +52,7 @@ protected:
 	 UMaterialInstanceDynamic* MaterialInstance;
 
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
-		 UParticleSystem* ExplosionEffects;
+	 UParticleSystem* ExplosionEffects;
 
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
 	float ExplosionDamage;
@@ -59,12 +63,19 @@ protected:
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
 		 bool bExploded;
 
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+	 bool bStartedExplosion;
+
+	 FTimerHandle TimerHandle_SelfDamage;
+
 	 void SelfDestruct();
+
+	 void DamageSelf();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
 };
