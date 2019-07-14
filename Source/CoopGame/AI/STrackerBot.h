@@ -47,10 +47,24 @@ protected:
 	 /** Material instance to pulse on damage */
 	 UMaterialInstanceDynamic* MaterialInstance;
 
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+		 UParticleSystem* ExplosionEffects;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+	float ExplosionDamage;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+	float ExplosionRadius;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrackerBot")
+		 bool bExploded;
+
+	 void SelfDestruct();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 
+	
 };
