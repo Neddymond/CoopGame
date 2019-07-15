@@ -12,6 +12,7 @@
 #include "DrawDebugHelpers.h"
 #include "SHealthComponent.h"
 #include "SCharacter.h"
+#include "Sound/SoundCue.h"
 
 
 // Sets default values
@@ -117,6 +118,9 @@ void ASTrackerBot::SelfDestruct()
 	/** Apply Damage */
 	UGameplayStatics::ApplyRadialDamage(this, ExplosionDamage, GetActorLocation(), ExplosionRadius, nullptr, IgnoredActors, this, GetInstigatorController(), true);
 
+	/** play Explosion Sound */
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
+
 	/** Delete Actor Immediately */
 	Destroy();
 
@@ -170,6 +174,8 @@ void ASTrackerBot::NotifyActorBeginOverlap(AActor* OtherActor)
 			GetWorldTimerManager().SetTimer(TimerHandle_SelfDamage, this, &ASTrackerBot::DamageSelf, 0.5f, true, 0.f);
 
 			bStartedExplosion = true;
+
+			UGameplayStatics::SpawnSoundAttached(SelfDestructSound, RootComponent);
 		}
 	}
 }
