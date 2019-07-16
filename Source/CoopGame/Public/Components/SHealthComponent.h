@@ -24,8 +24,11 @@ protected:
 	virtual void BeginPlay() override;
 
 	/** Actor's Health */
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "HealthComponents")
+	UPROPERTY(ReplicatedUsing=OnRep_Health, BlueprintReadOnly, Category = "HealthComponents")
 	float Health;
+
+	UFUNCTION()
+	void OnRep_Health(float OldHealth);
 
 	/** Actor's default Health */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthComponents")

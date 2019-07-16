@@ -9,7 +9,8 @@
 USHealthComponent::USHealthComponent()
 {
 	/** Default health of the player */
-	DefaultHealth = 100; 
+	DefaultHealth = 100;
+	
 }
 
 
@@ -34,10 +35,17 @@ void USHealthComponent::BeginPlay()
 	Health = DefaultHealth;
 }
 
+void USHealthComponent::OnRep_Health(float OldHealth)
+{
+	float Damage = Health - OldHealth;
+
+	OnHealthChanged.Broadcast(this, Health, Damage, nullptr, nullptr, nullptr);
+}
+
 /** Player's Health when damaged */
 void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	if (Damage < 0.0f)
+	if (Damage <= 0.0f)
 	{
 		return;
 	}
