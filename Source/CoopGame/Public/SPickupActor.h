@@ -24,7 +24,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UDecalComponent* DecalComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PickupActor")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickupActor")
 	TSubclassOf<ASPowerupActor> PowerupClass;
 
 	ASPowerupActor* PowerupInstance;

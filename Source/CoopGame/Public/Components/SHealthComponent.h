@@ -40,8 +40,12 @@ protected:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 public:	
-		UPROPERTY(BlueprintAssignable, Category = "Events")
+		UPROPERTY(EditAnywhere, BlueprintAssignable, Category = "Events")
 	FOnHealthChangedSignature OnHealthChanged;
+
+		/** Boost player Health */
+		UFUNCTION(BlueprintCallable, Category = "HealthComponent")
+		void Heal(float HealAmount);
 
 
 };

@@ -22,8 +22,11 @@ void ASPowerupActor::OnTickPowerup()
 {
 	TicksProcessed++;
 	
+	onPowerupTicked();
+
 	if (TicksProcessed >= TotalNoOfTicks)
 	{
+		/** Blueprint immplemented method; Return to normal speed */
 		OnExpired();
 
 		//Delete Timer
@@ -33,6 +36,7 @@ void ASPowerupActor::OnTickPowerup()
 
 void ASPowerupActor::ActivatePowerup()
 {
+	/** Blueprint implemented method; Increase the speed */
 	OnActivated();
 
 	if (PowerupInterval > 0)
