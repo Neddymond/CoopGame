@@ -35,9 +35,9 @@ protected:
 	UFUNCTION()
 	void OnTickPowerup();
 
-	void ActivatePowerup();
-
 public:	
+
+	void ActivatePowerup();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Powerup")
 	void OnActivated();

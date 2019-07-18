@@ -7,6 +7,7 @@
 #include "SPickupActor.generated.h"
 
 class USphereComponent;
+class ASPowerupActor;
 
 UCLASS()
 class COOPGAME_API ASPickupActor : public AActor
@@ -21,7 +22,19 @@ public:
 	USphereComponent* SphereComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UDecalComponent* DecalComponent;;
+	UDecalComponent* DecalComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PickupActor")
+	TSubclassOf<ASPowerupActor> PowerupClass;
+
+	ASPowerupActor* PowerupInstance;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PickupActor")
+	float cooldownDuration;
+
+	FTimerHandle TimerHandle_RespawnTimer;
+
+	void Respawn();
 
 protected:
 	// Called when the game starts or when spawned
