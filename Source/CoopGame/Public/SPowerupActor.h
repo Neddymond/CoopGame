@@ -19,6 +19,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	/** Keeps state of the powerup */
+	UPROPERTY(ReplicatedUsing = On_RepPowerupActive)
+		bool bIsPowerupActive;
+
+	UFUNCTION()
+	void On_RepPowerupActive();
+
 	/** Time between powerup ticks */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Powerup")
 	float PowerupInterval;
@@ -35,9 +42,14 @@ protected:
 	UFUNCTION()
 	void OnTickPowerup();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Powerup")
+		void OnPowerupStateChanged(bool	bNewIsActive);
+
 public:	
 
 	void ActivatePowerup();
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Powerup")
 	void OnActivated();
