@@ -24,12 +24,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UDecalComponent* DecalComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickupActor")
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "PickupActor")
 	TSubclassOf<ASPowerupActor> PowerupClass;
 
 	ASPowerupActor* PowerupInstance;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PickupActor")
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "PickupActor")
 	float cooldownDuration;
 
 	FTimerHandle TimerHandle_RespawnTimer;
