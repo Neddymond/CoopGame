@@ -50,10 +50,10 @@ void ASPowerupActor::OnTickPowerup()
 	}
 }
 
-void ASPowerupActor::ActivatePowerup()
+void ASPowerupActor::ActivatePowerup(AActor* ActivateFor)
 {
 	/** Blueprint implemented method; Increase the speed */
-	OnActivated();
+	OnActivated(ActivateFor);
 
 	bIsPowerupActive = true;
 

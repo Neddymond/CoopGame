@@ -47,12 +47,12 @@ protected:
 
 public:	
 
-	void ActivatePowerup();
+	void ActivatePowerup(AActor* ActivateFor);
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Powerup")
-	void OnActivated();
+	void OnActivated(AActor* ActivateFor);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Powerup")
 	void OnExpired();
