@@ -40,6 +40,11 @@ protected:
 	void PrepareForNextWave();
 
 	void CheckWaveState();
+	
+	// Check whether any player is still alive
+	void CheckAnyPlayerAlive();
+
+	void GameOver();
 
 public:
 

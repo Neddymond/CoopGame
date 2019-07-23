@@ -27,6 +27,8 @@
 	 Super::Tick(DeltaSeconds);
 
 	 CheckWaveState();
+
+	 CheckAnyPlayerAlive();
  }
 
 void ASGameMode::StartWave()
@@ -62,6 +64,7 @@ void ASGameMode::PrepareForNextWave()
 
 void ASGameMode::CheckWaveState()
 {
+	// check whether we are still preparing for next wave
 	bool bPreparingForWave = GetWorldTimerManager().IsTimerActive(TimerHandle_NextWaveStart);
 
 	if (NoOfBotsToSpawn > 0 || bPreparingForWave)
@@ -96,4 +99,38 @@ void ASGameMode::CheckWaveState()
 		PrepareForNextWave();
 	}
 
+}
+
+// Check if any player is still alive in the world
+void ASGameMode::CheckAnyPlayerAlive()
+{
+	// loop through the players in the world
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		APlayerController* PlayerController = It->Get();
+
+		if (PlayerController && PlayerController->GetPawn())
+		{
+			APawn* MyPawn = PlayerController->GetPawn();
+
+			// Get Players HealthComponent
+			USHealthComponent* HealthComponent = Cast<USHealthComponent>(MyPawn->GetComponentByClass(USHealthComponent::StaticClass()));
+
+			if (ensure(HealthComponent) && HealthComponent->GetHealth())
+			{
+				// Player's Alive
+				return;
+			}
+		}
+	}
+
+	// No player alive, End Game
+	GameOver();
+}
+
+void ASGameMode::GameOver()
+{
+	EndWave();
+
+	UE_LOG(LogTemp, Log, TEXT("All Player's dead, so Game is over"));
 }
