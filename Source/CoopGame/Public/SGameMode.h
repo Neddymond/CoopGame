@@ -20,8 +20,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameMode")
 	float TimeBetweenWaves;
 
-
 	FTimerHandle TimerHandle_BotSpawner;
+
+	FTimerHandle TimerHandle_NextWaveStart;
 
 	/** Hook for BP to spawn a single bot */
 	UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
@@ -38,9 +39,13 @@ protected:
 	// Set timer for next startwave
 	void PrepareForNextWave();
 
+	void CheckWaveState();
+
 public:
 
 	 ASGameMode();
 
 	virtual void StartPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 };
