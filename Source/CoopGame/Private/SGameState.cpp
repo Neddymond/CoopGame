@@ -5,9 +5,22 @@
 
 
 
-void ASGameState::OnRep_WaveState(EWaveStart OldState)
+void ASGameState::OnRep_WaveState(EWaveState OldState)
 {
 	WaveStatechanged(WaveState, OldState);
+}
+
+void ASGameState::SetWaveState(EWaveState NewState)
+{
+	if (Role == ROLE_Authority)
+	{
+		EWaveState OldState = WaveState;
+
+		WaveState = NewState;
+
+		//call on server
+		OnRep_WaveState(OldState);
+	}
 }
 
 void ASGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const

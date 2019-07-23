@@ -8,7 +8,7 @@
 
 
 UENUM(BlueprintType)
-enum class EWaveStart : uint8
+enum class EWaveState : uint8
 {
 	waitingToStart,
 
@@ -30,16 +30,18 @@ class COOPGAME_API ASGameState : public AGameStateBase
 protected:
 
 	UFUNCTION()
-	void OnRep_WaveState(EWaveStart OldState);
+	void OnRep_WaveState(EWaveState OldState);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "GameState")
-		void WaveStatechanged(EWaveStart NewState, EWaveStart OldState);
+		void WaveStatechanged(EWaveState NewState, EWaveState OldState);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_WaveState, Category = "GameState")
+		EWaveState WaveState;
 
 	
 public:
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_WaveState, Category = "GameState")
-	EWaveStart WaveState;
+	void SetWaveState(EWaveState WaveState);
 	
 	
 };
