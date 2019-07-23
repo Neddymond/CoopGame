@@ -5,6 +5,7 @@
 #include "Engine/world.h"
 #include "SHealthComponent.h"
 #include "GameframeWork/Pawn.h"
+#include "SGameState.h"
 
 
  ASGameMode::ASGameMode()
@@ -13,6 +14,9 @@
 
 	 PrimaryActorTick.bCanEverTick = true;
 	 PrimaryActorTick.TickInterval = 1.0f;
+
+	 // Default Gamestate class associated with this GameMode
+	 GameStateClass = ASGameState::StaticClass();
  }
 
  void ASGameMode::StartPlay()
@@ -133,4 +137,14 @@ void ASGameMode::GameOver()
 	EndWave();
 
 	UE_LOG(LogTemp, Log, TEXT("All Player's dead, so Game is over"));
+}
+
+void ASGameMode::SetWaveState(EWaveStart NewState)
+{
+	ASGameState* GameState = GetGameState<ASGameState>();
+
+	if (ensureAlways(GameState))
+	{
+		GameState->WaveState = NewState;
+	}
 }
