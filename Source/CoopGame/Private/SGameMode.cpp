@@ -6,6 +6,7 @@
 #include "SHealthComponent.h"
 #include "GameframeWork/Pawn.h"
 #include "SGameState.h"
+#include "SPlayerState.h"
 
 
  ASGameMode::ASGameMode()
@@ -15,8 +16,11 @@
 	 PrimaryActorTick.bCanEverTick = true;
 	 PrimaryActorTick.TickInterval = 1.0f;
 
-	 // Default Gamestate class associated with this GameMode
+	 // GameState class associated with this GameMode
 	 GameStateClass = ASGameState::StaticClass();
+
+	 // PlayerState class associated with this GameMode
+	 PlayerStateClass = ASPlayerState::StaticClass();
  }
 
  void ASGameMode::StartPlay()

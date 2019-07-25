@@ -23,6 +23,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	// check whether an Actor is dead
+	bool bIsDead;
+
 	/** Actor's Health */
 	UPROPERTY(ReplicatedUsing=OnRep_Health, BlueprintReadOnly, Category = "HealthComponents")
 	float Health;
