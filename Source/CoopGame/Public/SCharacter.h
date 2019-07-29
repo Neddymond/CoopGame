@@ -58,12 +58,6 @@ protected:
 	/** Character HealthComponent */
 	USHealthComponent* HealthComponent;
 
-	/** Fire a Weapon */
-	void StartFire();
-
-	/** Stop firing a weapon */
-	void StopFire();
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player")
 	TSubclassOf<ASWeapon>StarterWeaponClass;
 
@@ -100,5 +94,13 @@ public:
 
 	/** default field of view: Set during begin play */
 	float DefaultFOV;
+
+	/** Fire a Weapon */
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void StartFire();
+
+	/** Stop firing a weapon */
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void StopFire();
 	
 };
