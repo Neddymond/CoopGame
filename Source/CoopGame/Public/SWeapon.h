@@ -95,6 +95,10 @@ protected:
 
 	float TimeBetweenShots;
 
+	// Bullet Spread
+	UPROPERTY(EditAnywhere, Category = "Weapon", meta = (ClampMin = 0.0f))
+	float BulletSpread;
+
 	/** Trigger a function (OnRep_HitScanTrace) every time this property
 	gets replicated */
 	UPROPERTY(ReplicatedUsing=OnRep_HitScanTrace)

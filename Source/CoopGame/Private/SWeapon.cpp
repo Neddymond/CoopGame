@@ -33,6 +33,8 @@ ASWeapon::ASWeapon()
 	/** Damage value */
 	BaseDamage = 20.0f;
 
+	BulletSpread = 2.0f;
+
 	RateOfFire = 600;
 
 	/** Spawn/Replicate this Actor on client */
@@ -71,6 +73,10 @@ void ASWeapon::Fire()
 
 		/** Direction of the hit */
 		FVector ShotDirection = EyeRotation.Vector();
+
+		/** Bullet Spread */
+		float HalfRad = FMath::DegreesToRadians(BulletSpread);
+		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
 
 		/** End Location of the ray */
 		FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
