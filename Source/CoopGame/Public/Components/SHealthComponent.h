@@ -19,7 +19,7 @@ public:
 	// Sets default values for this component's properties
 	USHealthComponent();
 
-	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadOnly, Category = "HealthComponent")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HealthComponent")
 	uint8 TeamNum;
 
 protected:

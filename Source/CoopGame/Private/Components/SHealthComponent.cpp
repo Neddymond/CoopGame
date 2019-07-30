@@ -54,7 +54,7 @@ void USHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, 
 	{
 		return;
 	}
-
+	                                      
 	if (DamageCauser != DamagedActor && IsFriendly(DamagedActor, DamageCauser))
 	{
 		return;
